@@ -1,9 +1,10 @@
 package AVL;
 
+import BST.LinkedNodesBST;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AVLTree<E extends Comparable<E>> {
+public class AVLTree<E extends Comparable<E>> extends LinkedNodesBST<E> {
 
   /*
   AVL Invariant: for every node, the difference between the heights of its left and right child
@@ -15,7 +16,7 @@ public class AVLTree<E extends Comparable<E>> {
   Check after insertion or removal whether the tree became unbalanced and then rebalance if needed
    */
 
-  private AVLNode<E> root;
+  private Node<E> root;
 
   public AVLTree(E element) {
     root = new AVLNode<>(element);
@@ -27,31 +28,31 @@ public class AVLTree<E extends Comparable<E>> {
 
   @SuppressWarnings("unchecked")
   private AVLNode<E> rightRotation(AVLNode<E> subTree) {
-    AVLNode tempTree = subTree.getLeftSubTree();
-    subTree.setLeftSubTree(tempTree.getRightSubTree());
-    tempTree.setRightSubTree(subTree);
-    subTree.setHeight(Math.max(height(subTree.getLeftSubTree()), height(subTree.getRightSubTree())) + 1);
-    tempTree.setHeight(Math.max(height(tempTree.getLeftSubTree()), subTree.getHeight()) + 1);
+    AVLNode tempTree = (AVLNode<E>) subTree.getLeftSubtree();
+    subTree.setLeftSubtree(tempTree.getRightSubtree());
+    tempTree.setRightSubtree(subTree);
+    subTree.setHeight(Math.max(height((AVLNode<E>) subTree.getLeftSubtree()), height((AVLNode<E>) subTree.getRightSubtree())) + 1);
+    tempTree.setHeight(Math.max(height((AVLNode<E>) tempTree.getLeftSubtree()), subTree.getHeight()) + 1);
     return tempTree;
   }
 
   @SuppressWarnings("unchecked")
   private AVLNode<E> leftRotation(AVLNode<E> subTree) {
-    AVLNode tempTree = subTree.getRightSubTree();
-    subTree.setRightSubTree(tempTree.getLeftSubTree());
-    tempTree.setLeftSubTree(subTree);
-    subTree.setHeight(Math.max(height(subTree.getLeftSubTree()), height(subTree.getRightSubTree())) + 1);
-    tempTree.setHeight(Math.max(height(tempTree.getRightSubTree()), subTree.getHeight()) + 1);
+    AVLNode tempTree = (AVLNode<E>) subTree.getRightSubtree();
+    subTree.setRightSubtree(tempTree.getLeftSubtree());
+    tempTree.setLeftSubtree(subTree);
+    subTree.setHeight(Math.max(height((AVLNode<E>) subTree.getLeftSubtree()), height((AVLNode<E>) subTree.getRightSubtree())) + 1);
+    tempTree.setHeight(Math.max(height((AVLNode<E>) tempTree.getRightSubtree()), subTree.getHeight()) + 1);
     return tempTree;
   }
 
   private AVLNode<E> leftRightRotation(AVLNode<E> subTree) {
-    subTree.setLeftSubTree(leftRotation(subTree.getLeftSubTree()));
+    subTree.setLeftSubtree(leftRotation((AVLNode<E>) subTree.getLeftSubtree()));
     return rightRotation(subTree);
   }
 
   private AVLNode<E> rightLeftRotation(AVLNode<E> subTree) {
-    subTree.setRightSubTree(rightRotation(subTree.getRightSubTree()));
+    subTree.setRightSubtree(rightRotation((AVLNode<E>) subTree.getRightSubtree()));
     return leftRotation(subTree);
   }
 
@@ -59,15 +60,15 @@ public class AVLTree<E extends Comparable<E>> {
     int deltaHeight = deltaHeight(node);
     if (deltaHeight == 2) {
       //tree must be unbalanced to the left
-      if (height(node.getLeftSubTree().getLeftSubTree()) >=
-          height(node.getLeftSubTree().getRightSubTree())) {
+      if (height((AVLNode<E>) node.getLeftSubtree().getLeftSubtree()) >=
+          height((AVLNode<E>) node.getLeftSubtree().getRightSubtree())) {
         rightRotation(node);
       } else {
         leftRightRotation(node);
       }
     } else if (deltaHeight == -2) {
-      if (height(node.getRightSubTree().getRightSubTree()) >=
-          height(node.getRightSubTree().getLeftSubTree())) {
+      if (height((AVLNode<E>) node.getRightSubtree().getRightSubtree()) >=
+          height((AVLNode<E>) node.getRightSubtree().getLeftSubtree())) {
         leftRotation(node);
       } else {
         rightLeftRotation(node);
@@ -79,8 +80,8 @@ public class AVLTree<E extends Comparable<E>> {
     return node == null ? -1 : node.getHeight();
   }
 
-  private int deltaHeight(AVLNode<E> node) {
-    return height(node.getLeftSubTree()) - height(node.getRightSubTree());
+  private int deltaHeight(Node<E> node) {
+    return height((AVLNode<E>) node.getLeftSubtree()) - height((AVLNode<E>) node.getRightSubtree());
   }
 
   public boolean add(E element) {
@@ -93,51 +94,51 @@ public class AVLTree<E extends Comparable<E>> {
   }
 
 
-  private boolean add(AVLNode<E> subTree, E element) {
+  private boolean add(Node<E> subTree, E element) {
     if (element.compareTo(subTree.getElement()) == 0) {
       //element is already in the tree
       return false;
     } else if (element.compareTo(subTree.getElement()) < 0) {
       //element is in the left subtree
-      if (subTree.getLeftSubTree() == null) {
+      if (subTree.getLeftSubtree() == null) {
         //reached the leaves
-        subTree.setLeftSubTree(new AVLNode<>(element));
-        rebalance(subTree);
+        subTree.setLeftSubtree(new AVLNode<>(element));
+        rebalance((AVLNode<E>) subTree);
         return true;
       } else {
         //recursively add to the left subtree
-        return add(subTree.getLeftSubTree(), element);
+        return add(subTree.getLeftSubtree(), element);
       }
     } else {
       //element is in the right subtree
-      if (subTree.getRightSubTree() == null) {
+      if (subTree.getRightSubtree() == null) {
         //reached the leaves
-        subTree.setRightSubTree(new AVLNode<>(element));
-        rebalance(subTree);
+        subTree.setRightSubtree(new AVLNode<>(element));
+        rebalance((AVLNode<E>) subTree);
         return true;
       } else {
         //recursively add to the right subtree
-        return add(subTree.getRightSubTree(), element);
+        return add(subTree.getRightSubtree(), element);
       }
     }
   }
 
   public boolean remove(E element) {
-    Set<AVLNode<E>> deletedNode = new HashSet<>();
+    Set<Node<E>> deletedNode = new HashSet<>();
     root = remove(root, element, deletedNode);
     return !deletedNode.isEmpty();
   }
 
-  private AVLNode<E> remove(AVLNode<E> subTree, E element, Set<AVLNode<E>> deletedNode) {
+  private Node<E> remove(Node<E> subTree, E element, Set<Node<E>> deletedNode) {
     if (subTree == null) {
       //the node is not in the set
       return null;
     } else if (element.compareTo(subTree.getElement()) < 0) {
-      subTree.setLeftSubTree(remove(subTree.getLeftSubTree(), element, deletedNode));
-      rebalance(subTree);
+      subTree.setLeftSubtree(remove(subTree.getLeftSubtree(), element, deletedNode));
+      rebalance((AVLNode<E>) subTree);
     } else if (element.compareTo(subTree.getElement()) > 0) {
-      subTree.setRightSubTree(remove(subTree.getRightSubTree(), element, deletedNode));
-      rebalance(subTree);
+      subTree.setRightSubtree(remove(subTree.getRightSubtree(), element, deletedNode));
+      rebalance((AVLNode<E>) subTree);
     } else {
       deletedNode.add(subTree);
       subTree = deleteNode(subTree);
@@ -145,65 +146,7 @@ public class AVLTree<E extends Comparable<E>> {
     return subTree;
   }
 
-  private AVLNode<E> deleteNode(AVLNode<E> subTree) {
-    if (subTree.getLeftSubTree() == null && subTree.getRightSubTree() == null) {
-      //Case 1: no children - the subTree node is a leaf node
-      return null;
-    } else if (subTree.getLeftSubTree() != null && subTree.getRightSubTree() == null) {
-      //Case 2: 1 child - the subTree node has a left child
-      return subTree.getLeftSubTree();
-    } else if (subTree.getLeftSubTree() == null && subTree.getRightSubTree() != null) {
-      //Case 3: 1 child = the subTree node has a right child
-      return subTree.getLeftSubTree();
-    } else {
-      //Case 4: 2 children - replace the subTree node with the min node from the right child
-      AVLNode<E> newSubTreeNode = findMinNode(subTree.getRightSubTree());
-      newSubTreeNode.setLeftSubTree(subTree.getLeftSubTree());
-      newSubTreeNode.setRightSubTree(removeMinNode(subTree.getRightSubTree()));
-      return newSubTreeNode;
-    }
-  }
-
-  private AVLNode<E> removeMinNode(AVLNode<E> subTree) {
-    if (subTree.getLeftSubTree() == null) {
-      return subTree.getRightSubTree();
-    } else {
-      subTree.setLeftSubTree(removeMinNode(subTree.getLeftSubTree()));
-      return subTree;
-    }
-  }
-
-  private AVLNode<E> findMinNode(AVLNode<E> subTree) {
-    if (subTree.getLeftSubTree() == null) {
-      //if the left child is null we have found the smallest element in the subTree
-      return subTree;
-    } else {
-      //recursively continue the search for the smallest element
-      return findMinNode(subTree.getLeftSubTree());
-    }
-  }
-
-  public boolean contains(E element) {
-    return contains(root, element);
-  }
-
-  private boolean contains(AVLNode<E> subTree, E element) {
-    if (subTree == null) {
-      //element is not in the tree
-      return false;
-    } else if (element.compareTo(subTree.getElement()) == 0) {
-      //found the element
-      return true;
-    } else if (element.compareTo(subTree.getElement()) < 0) {
-      //keep searching recursively in the left subtree
-      return contains(subTree.getLeftSubTree(), element);
-    } else {
-      //keep searching recursively in the right subtree
-      return contains(subTree.getRightSubTree(), element);
-    }
-  }
-
-  public AVLNode<E> getRoot() {
+  public Node<E> getRoot() {
     return root;
   }
 
@@ -211,43 +154,14 @@ public class AVLTree<E extends Comparable<E>> {
     root = new AVLNode<>(element);
   }
 
-  private class AVLNode<T> {
+  private class AVLNode<T> extends Node<T> {
 
-    private T element;
-    private AVLNode<T> leftSubTree;
-    private AVLNode<T> rightSubTree;
     private int height;
 
 
-    private AVLNode(T element, AVLNode<T> leftSubTree, AVLNode<T> rightSubTree) {
-      this.element = element;
-      this.leftSubTree = leftSubTree;
-      this.rightSubTree = rightSubTree;
-      this.height = 0;
-    }
-
     private AVLNode(T element) {
-      this(element, null, null);
-    }
-
-    public T getElement() {
-      return element;
-    }
-
-    public AVLNode<T> getLeftSubTree() {
-      return leftSubTree;
-    }
-
-    public void setLeftSubTree(AVLNode<T> leftSubTree) {
-      this.leftSubTree = leftSubTree;
-    }
-
-    public AVLNode<T> getRightSubTree() {
-      return rightSubTree;
-    }
-
-    public void setRightSubTree(AVLNode<T> rightSubTree) {
-      this.rightSubTree = rightSubTree;
+      super(element);
+      this.height = 0;
     }
 
     public int getHeight() {

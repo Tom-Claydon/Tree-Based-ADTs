@@ -76,7 +76,7 @@ public class LinkedNodesBST<E extends Comparable<E>> implements BST<E> {
     return subTree;
   }
 
-  private Node<E> deleteNode(Node<E> subTree) {
+  protected Node<E> deleteNode(Node<E> subTree) {
     if (subTree.getLeftSubtree() == null && subTree.getRightSubtree() == null) {
       //Case 1: no children - the subTree node is a leaf node
       return null;
@@ -189,7 +189,7 @@ public class LinkedNodesBST<E extends Comparable<E>> implements BST<E> {
   }
 
 
-  private class Node<T> {
+  protected class Node<T> {
 
     private T element;
     private Node<T> leftSubtree;
