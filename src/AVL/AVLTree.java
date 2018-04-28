@@ -16,14 +16,12 @@ public class AVLTree<E extends Comparable<E>> extends LinkedNodesBST<E> {
   Check after insertion or removal whether the tree became unbalanced and then rebalance if needed
    */
 
-  private Node<E> root;
-
   public AVLTree(E element) {
-    root = new AVLNode<>(element);
+    super(element);
   }
 
   public AVLTree() {
-    root = null;
+    super(null);
   }
 
   @SuppressWarnings("unchecked")
@@ -157,7 +155,6 @@ public class AVLTree<E extends Comparable<E>> extends LinkedNodesBST<E> {
   private class AVLNode<T> extends Node<T> {
 
     private int height;
-
 
     private AVLNode(T element) {
       super(element);

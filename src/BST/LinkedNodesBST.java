@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class LinkedNodesBST<E extends Comparable<E>> implements BST<E> {
 
-  private Node<E> root;
+  protected Node<E> root;
 
   public LinkedNodesBST(E element) {
     root = new Node<>(element);
@@ -135,11 +135,11 @@ public class LinkedNodesBST<E extends Comparable<E>> implements BST<E> {
     }
   }
 
-  private Node<E> getRoot() {
+  public Node<E> getRoot() {
     return root;
   }
 
-  private void setRoot(E element) {
+  public void setRoot(E element) {
     root = new Node<>(element);
   }
 
