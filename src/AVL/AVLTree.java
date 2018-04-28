@@ -17,11 +17,11 @@ public class AVLTree<E extends Comparable<E>> extends LinkedNodesBST<E> {
    */
 
   public AVLTree(E element) {
-    super(element);
+    root = new AVLNode<>(element);
   }
 
   public AVLTree() {
-    super(null);
+    root = null;
   }
 
   @SuppressWarnings("unchecked")

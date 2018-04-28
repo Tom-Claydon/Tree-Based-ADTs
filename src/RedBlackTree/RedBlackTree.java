@@ -5,11 +5,11 @@ import BST.LinkedNodesBST;
 public class RedBlackTree<E extends Comparable<E>> extends LinkedNodesBST<E> {
 
   public RedBlackTree(E element) {
-    super(element);
+    root = new RedBlackNode<>(element);
   }
 
   public RedBlackTree() {
-    super(null);
+    root = null;
   }
 
   @Override
