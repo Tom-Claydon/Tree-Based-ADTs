@@ -14,17 +14,39 @@ public class RedBlackTree<E extends Comparable<E>> extends LinkedNodesBST<E> {
 
   @Override
   public boolean add(E element) {
-   return false;
+    //TO IMPLEMENT
+    return false;
   }
 
   @Override
   public boolean remove(E element) {
+    //TO IMPLEMENT
     return false;
   }
 
   @Override
   public boolean contains(E element) {
+    //TO IMPLEMENT
     return false;
+  }
+
+  private RedBlackNode<E> findNode(E element) {
+    Node<E> current = root;
+    Node<E> parent = null;
+    while (current != null) {
+      parent = current;
+      int comparison = element.compareTo(current.getElement());
+      if (comparison < 0) {
+        current = current.getLeftSubtree();
+      } else if (comparison == 0) {
+        break;
+      } else {
+        assert comparison > 0;
+        current = current.getRightSubtree();
+      }
+    }
+    assert current != null;
+    return new RedBlackNode<>(current.getElement(), (RedBlackNode<E>) parent);
   }
 
   private class RedBlackNode<T> extends Node<T> {
@@ -32,17 +54,30 @@ public class RedBlackTree<E extends Comparable<E>> extends LinkedNodesBST<E> {
     private Colour colour;
     private RedBlackNode<T> parent;
 
+    public RedBlackNode(T element, RedBlackNode<T> parent) {
+      this(element);
+      this.parent = parent;
+    }
+
     public RedBlackNode(T element) {
       super(element);
       this.colour = Colour.RED;
     }
 
-    public Colour getColour() {
-      return colour;
+    public boolean isBlack() {
+      return colour == Colour.BLACK;
     }
 
-    public void setColour(Colour colour) {
-      this.colour = colour;
+    public boolean isRed() {
+      return colour == Colour.RED;
+    }
+
+    public void setBlack() {
+      colour = Colour.BLACK;
+    }
+
+    public void setRed() {
+      colour = Colour.RED;
     }
 
     public RedBlackNode<T> getParent() {
